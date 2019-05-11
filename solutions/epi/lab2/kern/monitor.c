@@ -61,14 +61,14 @@ mon_kerninfo(int argc, char **argv, struct Trapframe *tf)
 void one_frame_backtrace(uint32_t* ebp) {
     uint32_t eip = *(ebp + 1);
 
-    cprintf("  ebp %08x  eip %08x  args %08x %08x %08x %08x %08x\n", 
+    cprintf("  ebp %08x  eip %08x  args %08x %08x %08x %08x %08x\n",
 			ebp, eip, *(ebp + 2), *(ebp + 3), *(ebp + 4), *(ebp + 5), *(ebp + 6));
 
     struct Eipdebuginfo info;
     if (debuginfo_eip(eip, &info) < 0)
 		cprintf("    error while finding debug info\n");
 
-    cprintf("    %s:%d: %.*s+%u\n", 
+    cprintf("    %s:%d: %.*s+%u\n",
 		info.eip_file, info.eip_line, info.eip_fn_namelen, info.eip_fn_name, eip -  info.eip_fn_addr);
 }
 
@@ -79,7 +79,7 @@ mon_backtrace(int argc, char **argv, struct Trapframe *tf)
     cprintf("Stack backtrace:\n");
 
     uint32_t *ebp = (uint32_t *)read_ebp();
- 
+
     while (ebp != 0) {
         one_frame_backtrace(ebp);
         ebp = (uint32_t *)*ebp;
@@ -87,8 +87,8 @@ mon_backtrace(int argc, char **argv, struct Trapframe *tf)
     return 0;
 }
 
-int 
-mon_panic(int argc, char **argv, struct Trapframe *tf) 
+int
+mon_panic(int argc, char **argv, struct Trapframe *tf)
 {
     panic("Panic was asked");
 }

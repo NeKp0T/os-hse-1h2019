@@ -188,7 +188,7 @@ mem_init(void)
 	// create initial page directory.
 	kern_pgdir = (pde_t *) boot_alloc(PGSIZE);
 	memset(kern_pgdir, 0, PGSIZE);
-	
+
 
 	//////////////////////////////////////////////////////////////////////
 	// Recursively insert PD in itself as a page table, to form
@@ -206,7 +206,7 @@ mem_init(void)
 	// array.  'npages' is the number of physical pages in memory.
 	// Your code goes here:
 	pages = boot_alloc(npages * sizeof(struct PageInfo));
-	
+
 	//////////////////////////////////////////////////////////////////////
 	// Now that we've allocated the initial kernel data structures, we set
 	// up the list of free physical pages. Once we've done so, all further
@@ -216,7 +216,7 @@ mem_init(void)
 	page_init();
 
 	// check_page_free_list2(1);
-	// panic("not implemented");	
+	// panic("not implemented");
 
 	check_page_free_list(1);
 	check_page_alloc();
@@ -327,7 +327,7 @@ page_init(void)
 
 	pages[0].pp_ref = 1; // mark as in use
 	pages[0].pp_link = NULL;
-	
+
 	size_t i;
 	for (i = 1; i < npages; i++) {
 		if (i < PGNUM(IOPHYSMEM) || i >= PGNUM(PADDR(boot_alloc(0))))
@@ -430,7 +430,7 @@ pgdir_walk(pde_t *pgdir, const void *va, int create)
 		if (!create)
 			return NULL;
 		struct PageInfo* new_page = page_alloc(ALLOC_ZERO);
-		if (new_page == NULL) 
+		if (new_page == NULL)
 			return NULL;
 		new_page->pp_ref++;
 		*pgdir = PTE_P | PTE_W | PTE_U | page2pa(new_page);
@@ -493,7 +493,7 @@ page_insert(pde_t *pgdir, struct PageInfo *pp, void *va, int perm)
 	if (pt == NULL) {
 		return -E_NO_MEM;
 	}
-	
+
 	pp->pp_ref++;
 	if (*pt & PTE_P) {
 		page_remove(pgdir, va);
@@ -526,7 +526,7 @@ page_lookup(pde_t *pgdir, void *va, pte_t **pte_store)
 	}
 	if (pte_store != NULL)
 		*pte_store = pt;
-	
+
 	return pa2page(PTE_ADDR(*pt));
 }
 
